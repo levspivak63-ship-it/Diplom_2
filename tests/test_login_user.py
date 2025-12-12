@@ -8,7 +8,7 @@ class TestLoginUser:
     """Тесты для авторизации пользователя."""
     
     @allure.title("Вход под существующим пользователем")
-    @allure.severity(allure.severity_level.CRITICAL)
+   
     def test_login_existing_user_success(self):
         """Вход под существующим пользователем."""
         with allure.step("Подготовка данных для входа"):
@@ -30,7 +30,7 @@ class TestLoginUser:
             assert response_data["user"]["email"] == EXISTING_USER["email"]
     
     @allure.title("Вход с неверным логином и паролем")
-    @allure.severity(allure.severity_level.NORMAL)
+    
     def test_login_wrong_credentials_failure(self):
         """Вход с неверным логином и паролем."""
         with allure.step("Подготовка неверных данных"):

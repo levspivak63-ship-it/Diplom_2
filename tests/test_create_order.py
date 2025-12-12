@@ -7,7 +7,7 @@ class TestCreateOrder:
     """Тесты для создания заказа."""
     
     @allure.title("Создание заказа с авторизацией")
-    @allure.severity(allure.severity_level.CRITICAL)
+    
     def test_create_order_with_auth_success(self, auth_token, valid_ingredients):
         headers = {"Authorization": auth_token}
         order_data = {"ingredients": valid_ingredients}
@@ -20,7 +20,7 @@ class TestCreateOrder:
         assert "order" in response_data
     
     @allure.title("Создание заказа без авторизации")
-    @allure.severity(allure.severity_level.NORMAL)
+    
     def test_create_order_without_auth_failure(self, valid_ingredients):
         order_data = {"ingredients": valid_ingredients}
         
@@ -31,7 +31,7 @@ class TestCreateOrder:
         assert response_data["success"] is True
     
     @allure.title("Создание заказа с ингредиентами")
-    @allure.severity(allure.severity_level.CRITICAL)
+    
     def test_create_order_with_ingredients_success(self, auth_token, valid_ingredients):
         headers = {"Authorization": auth_token}
         order_data = {"ingredients": valid_ingredients}
@@ -43,7 +43,7 @@ class TestCreateOrder:
         assert response_data["success"] is True
     
     @allure.title("Создание заказа без ингредиентов")
-    @allure.severity(allure.severity_level.NORMAL)
+    
     def test_create_order_without_ingredients_failure(self, auth_token):
         headers = {"Authorization": auth_token}
         order_data = {"ingredients": []}
@@ -55,7 +55,7 @@ class TestCreateOrder:
         assert response_data["success"] is False
     
     @allure.title("Создание заказа с неверным хешем ингредиентов")
-    @allure.severity(allure.severity_level.NORMAL)
+    
     def test_create_order_with_invalid_ingredient_hash_failure(self, auth_token, invalid_ingredient_hash):
         headers = {"Authorization": auth_token}
         order_data = {"ingredients": [invalid_ingredient_hash, "another_invalid_hash"]}

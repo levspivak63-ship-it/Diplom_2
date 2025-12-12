@@ -8,7 +8,7 @@ class TestCreateUser:
     """Тесты для создания пользователя."""
     
     @allure.title("Создать уникального пользователя")
-    @allure.severity(allure.severity_level.CRITICAL)
+    
     def test_create_unique_user_success(self):
         """Создать уникального пользователя."""
         with allure.step("Подготовка уникальных данных"):
@@ -29,7 +29,7 @@ class TestCreateUser:
             requests.delete(f"{BASE_URL}/auth/user", headers=headers, timeout=5)
     
     @allure.title("Создать пользователя, который уже зарегистрирован")
-    @allure.severity(allure.severity_level.NORMAL)
+    
     def test_create_existing_user_failure(self):
         """Создать пользователя, который уже зарегистрирован."""
         with allure.step("Создание первого пользователя"):
@@ -48,7 +48,7 @@ class TestCreateUser:
             requests.delete(f"{BASE_URL}/auth/user", headers=headers, timeout=5)
     
     @allure.title("Создать пользователя без заполнения одного из обязательных полей")
-    @allure.severity(allure.severity_level.NORMAL)
+    
     @pytest.mark.parametrize("missing_field", ["email", "password", "name"])
     def test_create_user_missing_field_failure(self, missing_field):
         """Создать пользователя и не заполнить одно из обязательных полей."""
