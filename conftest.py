@@ -69,3 +69,16 @@ def valid_ingredients():
     # Возвращаем ID двух первых ингредиентов
     return [ingredients[0]["_id"], ingredients[1]["_id"]]
 
+@pytest.fixture
+def delete_user_after_test():
+    """Фикстура для удаления пользователя ПОСЛЕ теста."""
+    token = None
+    
+    def save_token(user_token):
+        nonlocal token
+        token = user_token
+    
+    yield save_token
+    
+    headers = {"Authorization": token}
+    requests.delete(f"{TestData.BASE_URL}/auth/user", headers=headers, timeout=5)
