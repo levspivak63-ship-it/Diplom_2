@@ -1,8 +1,10 @@
+# conftest.py
+
 """Фикстуры для тестов."""
 
 import pytest
 import requests
-from data import BASE_URL
+from data import TestData
 from helper import generate_user_data
 
 @pytest.fixture
@@ -16,7 +18,7 @@ def create_user():
     user_data = generate_user_data()
     
     # 2. Регистрируем пользователя
-    response = requests.post(f"{BASE_URL}/auth/register", json=user_data, timeout=10)
+    response = requests.post(f"{TestData.BASE_URL}/auth/register", json=user_data, timeout=10)
     
     # 3. Получаем токен (если регистрация успешна)
     if response.status_code == 200:
@@ -36,7 +38,7 @@ def create_user():
     if user_data.get("access_token"):
         try:
             headers = {"Authorization": user_data["access_token"]}
-            requests.delete(f"{BASE_URL}/auth/user", headers=headers, timeout=5)
+            requests.delete(f"{TestData.BASE_URL}/auth/user", headers=headers, timeout=5)
         except Exception:
             pass
 
@@ -51,7 +53,7 @@ def auth_token(create_user):
 @pytest.fixture
 def valid_ingredients():
     """Фикстура для получения валидных ингредиентов из API."""
-    response = requests.get(f"{BASE_URL}/ingredients", timeout=5)
+    response = requests.get(f"{TestData.BASE_URL}/ingredients", timeout=5)
     
     if response.status_code != 200:
         pytest.skip("Не удалось получить ингредиенты из API")
@@ -67,7 +69,3 @@ def valid_ingredients():
     # Возвращаем ID двух первых ингредиентов
     return [ingredients[0]["_id"], ingredients[1]["_id"]]
 
-@pytest.fixture
-def invalid_ingredient_hash():
-    """Фикстура для невалидного хеша ингредиента."""
-    return "invalid_hash_12345"

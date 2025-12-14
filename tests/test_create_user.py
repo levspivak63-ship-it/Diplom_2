@@ -1,7 +1,9 @@
+# test_create_user.py
+
 import allure
 import pytest
 import requests
-from data import BASE_URL
+from data import TestData
 from helper import generate_user_data
 
 class TestCreateUser:
@@ -15,7 +17,7 @@ class TestCreateUser:
             user_data = generate_user_data()
         
         with allure.step("Отправка запроса на регистрацию"):
-            response = requests.post(f"{BASE_URL}/auth/register", json=user_data, timeout=10)
+            response = requests.post(f"{TestData.BASE_URL}/auth/register", json=user_data, timeout=10)
         
         with allure.step("Проверка успешной регистрации"):
             assert response.status_code == 200
@@ -26,7 +28,7 @@ class TestCreateUser:
         
         with allure.step("Удаление пользователя"):
             headers = {"Authorization": response_data["accessToken"]}
-            requests.delete(f"{BASE_URL}/auth/user", headers=headers, timeout=5)
+            requests.delete(f"{TestData.BASE_URL}/auth/user", headers=headers, timeout=5)
     
     @allure.title("Создать пользователя, который уже зарегистрирован")
     
@@ -34,18 +36,18 @@ class TestCreateUser:
         """Создать пользователя, который уже зарегистрирован."""
         with allure.step("Создание первого пользователя"):
             user_data = generate_user_data()
-            response1 = requests.post(f"{BASE_URL}/auth/register", json=user_data, timeout=10)
+            response1 = requests.post(f"{TestData.BASE_URL}/auth/register", json=user_data, timeout=10)
             assert response1.status_code == 200
         
         with allure.step("Попытка повторной регистрации"):
-            response2 = requests.post(f"{BASE_URL}/auth/register", json=user_data, timeout=10)
+            response2 = requests.post(f"{TestData.BASE_URL}/auth/register", json=user_data, timeout=10)
             assert response2.status_code == 403
             response_data = response2.json()
-            assert response_data["success"] is False
+            assert response_data["message"] == "User already exists"
         
         with allure.step("Удаление пользователя"):
             headers = {"Authorization": response1.json()["accessToken"]}
-            requests.delete(f"{BASE_URL}/auth/user", headers=headers, timeout=5)
+            requests.delete(f"{TestData.BASE_URL}/auth/user", headers=headers, timeout=5)
     
     @allure.title("Создать пользователя без заполнения одного из обязательных полей")
     
@@ -57,7 +59,7 @@ class TestCreateUser:
             del user_data[missing_field]
         
         with allure.step("Попытка регистрации с неполными данными"):
-            response = requests.post(f"{BASE_URL}/auth/register", json=user_data, timeout=10)
+            response = requests.post(f"{TestData.BASE_URL}/auth/register", json=user_data, timeout=10)
             assert response.status_code in [400, 403]
             response_data = response.json()
-            assert response_data["success"] is False
+            assert response_data["message"] == "Email, password and name are required fields"
